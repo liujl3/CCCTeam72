@@ -68,6 +68,7 @@ def save_tweet(tweet):
         except Exception:
             place = None
         database_tweet[str(tweet_id)] = {
+            'time': tweet['created_at']
             'text': tweet['text'],
             'hashtag': tweet["entities"]["hashtags"],
             'latlng': latlng,
@@ -75,6 +76,8 @@ def save_tweet(tweet):
             'lang': tweet['lang'] if 'lang' in tweet else None,
             'raw': tweet
         }
+        # additional tables
+        # related_tweet - (tweet_id, date, state)
 
 # call api
 def search_data(next, fromDate, toDate):
