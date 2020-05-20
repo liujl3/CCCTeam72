@@ -16,7 +16,7 @@ consumer_secret = "jWwc4amOZWEqCsm6MvAFRXDzGC7cxcngje1kobRe6sDnFJqvZe"
 # time 2020/01/01 - 2020/05/01
 # date = [str(d*1000000+10000) for d in range(202001, 202006)]
 # dev
-date = ["202005140000","202005170000"]
+date = ["202004200000","202005200000"]
 
 # auth
 
@@ -36,7 +36,7 @@ def get_bearer_token(key, secret):
 
 # database
 database_name = "tweet"
-database_host = "http://admin:1234567@127.0.0.1:5984/"
+database_host = "http://admin:123456@45.113.232.155:5984/"
 database_server = couchdb.Server(database_host)
 database_status_name = "status"
 # init db
@@ -53,26 +53,8 @@ else:
 def save_tweet(tweet):
     tweet_id = tweet['id']
     if str(tweet_id) not in database_tweet:
-        latlng = None
-        try:
-            if('geo' in tweet):
-                latlng = tweet['geo']['coordinates']
-            elif('coordinates' in tweet):
-                latlng = [tweet['coordinates']['coordinates']
-                          [1], tweet['coordinates']['coordinates'][0]]
-        except Exception:
-            latlng = None
-        place = None
-        try:
-            place = tweet['place']['full_name']
-        except Exception:
-            place = None
         database_tweet[str(tweet_id)] = {
             'time': tweet['created_at'],
-            'text': tweet['text'],
-            'hashtag': tweet["entities"]["hashtags"],
-            'latlng': latlng,
-            'place': place,
             'lang': tweet['lang'] if 'lang' in tweet else None,
             'raw': tweet
         }
@@ -84,13 +66,14 @@ def search_data(next, fromDate, toDate):
     try:
         # has:geo
         params = {
-            "query": "place_country:AU",
+            "query": "place_country:AU has:geo",
             "fromDate": fromDate,
-            "toDate": toDate
+            "toDate": toDate,
+            "maxResults": 500
         }
         if next:
             params["next"] = next
-        response = requests.post("https://api.twitter.com/1.1/tweets/search/fullarchive/cccproj.json",
+        response = requests.post("https://api.twitter.com/1.1/tweets/search/30day/ccc.json",
                                  headers={
                                      "content-type": "application/json",
                                      "authorization": "Bearer {}".format(
@@ -105,7 +88,6 @@ def search_data(next, fromDate, toDate):
         else:
             return True, None, None
     except Exception as e:
-        print(e)
         return False, None, e
 
 def record_status(partID, i, status, e, next, fromDate, toDate):
@@ -125,13 +107,13 @@ def main(start_date_index, next):
         fromDate = date[i]
         toDate = date[i+1]
         while True:
-            print(next)
             status, next, e = search_data(next, fromDate, toDate)
             record_status(partID, i, status, e, next, fromDate, toDate)
+            print(str(partID) + ":\t" + str(status))
+            time.sleep(1)
             if next == None:
                 break
             partID += 1
-
 
 if __name__ == "__main__":
     main(sys.argv[0] if len(sys.argv) == 2 else None, sys.argv[1] if len(sys.argv) == 2 else None)
