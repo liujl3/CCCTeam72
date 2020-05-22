@@ -1,6 +1,6 @@
-# team-72-web
+# team72-web
 
-> A Vue.js project
+> team72 web app
 
 ## Build Setup
 
