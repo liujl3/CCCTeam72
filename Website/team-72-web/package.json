@@ -1,7 +1,7 @@
 {
-  "name": "team72-web",
+  "name": "team-72-web",
   "version": "1.0.0",
-  "description": "team72 web app",
+  "description": "A Vue.js project",
   "author": "liujl3 <55141756+liujl3@users.noreply.github.com>",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "element-ui": "^2.13.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
