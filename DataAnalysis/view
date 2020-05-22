@@ -1,9 +1,13 @@
-function (doc) {
-  var hashList = ["covid2019","caronavirus","carona virus","2019nCoV","codvid_19","codvid19","corona","corona","corona vairus","corona virus","coronavid19","coronavid19","Coronavirus","Coronavirus","coronga virus","corongavirus","Corvid19virus","covd19","covid","covid 19","covid_19","covid_19","Covid_19","covid19","Covid19","covid2019","nCoV","nCoV","ncov2019","nCoV2019","NeuerCoronavirus","NeuerCoronavirus","Nouveau coronavirus","NouveauCoronavirus","novel coronavirus","NovelCorona","novelcoronavirus","novelcoronavirus","NovelCoronavirus","NuovoCoronavirus","SARSCoV2","SARSCoV2","the coronas","thecoronas","Virus Corona","viruscorona","코로나","코로나19","코로나바이러스","コロナ","コロナウイルス","新冠病毒","新冠肺炎","新型コロナウイルス","新型冠状病毒","कोविड_19","कोविड-१९","कोरोनावायरस","CONVID19"]
-  for(var i=0, k=hashList.length; i<k; i++){
-    if(doc.row.entity.indexOf(hashList[i]) != -1){
-      emit({'id':doc.id,'place':doc.place}, {'id':doc.id,'place':doc.place});
-      break;
+{
+  "_id": "_design/newDesign",
+  "_rev": "8-0b3d9f540bc446c784296c5d6dd8a6e0",
+  "views": {
+    "new-view": {
+      "map": "function (doc) {\n  var hashList = [\"covid2019\",\"caronavirus\",\"carona virus\",\"2019nCoV\",\"codvid_19\",\"codvid19\",\"corona\",\"corona\",\"corona vairus\",\"corona virus\",\"coronavid19\",\"coronavid19\",\"Coronavirus\",\"Coronavirus\",\"coronga virus\",\"corongavirus\",\"Corvid19virus\",\"covd19\",\"covid\",\"covid 19\",\"covid_19\",\"covid_19\",\"Covid_19\",\"covid19\",\"Covid19\",\"covid2019\",\"nCoV\",\"nCoV\",\"ncov2019\",\"nCoV2019\",\"NeuerCoronavirus\",\"NeuerCoronavirus\",\"Nouveau coronavirus\",\"NouveauCoronavirus\",\"novel coronavirus\",\"NovelCorona\",\"novelcoronavirus\",\"novelcoronavirus\",\"NovelCoronavirus\",\"NuovoCoronavirus\",\"SARSCoV2\",\"SARSCoV2\",\"the coronas\",\"thecoronas\",\"Virus Corona\",\"viruscorona\",\"코로나\",\"코로나19\",\"코로나바이러스\",\"コロナ\",\"コロナウイルス\",\"新冠病毒\",\"新冠肺炎\",\"新型コロナウイルス\",\"新型冠状病毒\",\"कोविड_19\",\"कोविड-१९\",\"कोरोनावायरस\",\"CONVID19\"]\n  for(var i=0, k=hashList.length; i<k; i++){\n    if(doc.row.entity.indexOf(hashList[i]) != -1){\n      emit({'id':doc.id,'place':doc.raw.place}, {'id':doc.id,'place':doc.raw.place});\n      break;\n    }\n  }\n}"
+    },
+    "coording": {
+      "map": "function (doc) {\n  var hashList = [\"covid2019\",\"caronavirus\",\"carona virus\",\"2019nCoV\",\"codvid_19\",\"codvid19\",\"corona\",\"corona\",\"corona vairus\",\"corona virus\",\"coronavid19\",\"coronavid19\",\"Coronavirus\",\"Coronavirus\",\"coronga virus\",\"corongavirus\",\"Corvid19virus\",\"covd19\",\"covid\",\"covid 19\",\"covid_19\",\"covid_19\",\"Covid_19\",\"covid19\",\"Covid19\",\"covid2019\",\"nCoV\",\"nCoV\",\"ncov2019\",\"nCoV2019\",\"NeuerCoronavirus\",\"NeuerCoronavirus\",\"Nouveau coronavirus\",\"NouveauCoronavirus\",\"novel coronavirus\",\"NovelCorona\",\"novelcoronavirus\",\"novelcoronavirus\",\"NovelCoronavirus\",\"NuovoCoronavirus\",\"SARSCoV2\",\"SARSCoV2\",\"the coronas\",\"thecoronas\",\"Virus Corona\",\"viruscorona\",\"코로나\",\"코로나19\",\"코로나바이러스\",\"コロナ\",\"コロナウイルス\",\"新冠病毒\",\"新冠肺炎\",\"新型コロナウイルス\",\"新型冠状病毒\",\"कोविड_19\",\"कोविड-१९\",\"कोरोनावायरस\",\"CONVID19\"]\n  for(var i=0, k=hashList.length; i<k; i++){\n    if(doc.row.entity.indexOf(hashList[i]) != -1){\n      var lantitude = 0\n      var longitude = 0\n      for(var j=0; j<4; j++){\n        longitude += doc.raw.place.bounding_box.coordinates[0][j][0];\n        latitude += doc.raw.place.bounding_box.coordinates[0][j][1];\n      }\n      emit({'id':doc.id,'place':doc.raw.place}, {'id':doc.id,'coordingates':[longitude,latitude],'city':doc.raw.place.bounding_box.full_name.split(\",\")[0],'state':doc.raw.place.bounding_box.full_name.split(\",\")[1]});\n      break;\n    }\n  }\n}"
     }
-  }
+  },
+  "language": "javascript"
 }

@@ -19,19 +19,34 @@ def connect_database(database_name):
 
 
 def gather(db):
-    city = []
+    full_name = []
     coordinates = []
     ids = []
+    lang = []
     geo = Nominatim()
     for item in db.view("_design/newDesign/_view/new-view"):
         tweet_id = db[id]
         if tweet_id not in ids:
             ids.append(tweet_id)
-            coordinates.append(item.place['bounding_box']['coordinates'])
-            city.append(item.place["full_name"])
+            longitude = 0
+            latitude = 0
+            for i in range(0,3):
+                longitude += item.place['bounding_box']['coordinates'][0][i][0]
+                latitude += item.place['bounding_box']['coordinates'][0][i][1]
+            coordinates.append([longitude/4,latitude/4])
+            full_name.append(item.place['full_name'])
+            lang.append(item['lang'])
 
-    d = {'full_name': city, 'coordinates': coordinates}
-    df = pd.DataFrame(data=d)
+    data = {'full_name': full_name, 'coordinates': coordinates}
+    df = pd.DataFrame(data=data)
+
+    city = full_name.str.split(',', expand=True)
+    data_lang = {'city': city.icol(0), 'state': city.icol(1), 'coordinates': coordinates, 'lang': lang,'count':[]}
+    dlf = pd.DataFrame(data=data_lang)
+    city_lang = dlf.groupby(['city','lang']).count()
+    clf = pd.DataFrame(city_lang)["count"].reset_index(name="Count")
+    save_result(clf, "city_lang_results")
+#city lang state count
     return df
 
 
@@ -43,7 +58,7 @@ def tweets_count(df):
     city_state = pd.DataFrame({'full_name': full_name, 'city': city.icol(0), 'state': city.icol(1)})
     city_df = pd.merge(city_df, city_state, on='full_name')
     return city_df
-
+# full_name city state Tweets_Num Hospital_Num
 
 def data_combine(tweet_df, aurin_df):
     geolocator = Nominatim()
@@ -68,10 +83,9 @@ def data_combine(tweet_df, aurin_df):
 
     full_name = []
     for i in range(city_aurin):
-        full_name.append(city_aurin[i] + ',' + state[i])
+        full_name.append(city_aurin[i]+','+state[i])
 
-    citys_hospital = pd.DataFrame(
-        {'full_name': full_name, 'city': city_aurin, 'state': state, 'coordinate': coordinates})
+    citys_hospital = pd.DataFrame({'full_name':full_name,'city': city_aurin, 'state': state, 'coordinate': coordinates})
     hospital_num = citys_hospital.groupby['city']
     new_aurin_df = pd.DataFrame(hospital_num)['coordinate'].reset_index(name="Hospital_Num")
     final_df = pd.merge(tweet_df, new_aurin_df, on='city')
