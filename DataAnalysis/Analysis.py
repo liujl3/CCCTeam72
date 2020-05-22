@@ -88,7 +88,7 @@ def data_combine(tweet_df, aurin_df):
     citys_hospital = pd.DataFrame({'full_name':full_name,'city': city_aurin, 'state': state, 'coordinate': coordinates})
     hospital_num = citys_hospital.groupby['city']
     new_aurin_df = pd.DataFrame(hospital_num)['coordinate'].reset_index(name="Hospital_Num")
-    final_df = pd.merge(tweet_df, new_aurin_df, on='city')
+    final_df = pd.merge(tweet_df, new_aurin_df, on=['full_name', 'city', 'state'])
 
     return final_df
 
