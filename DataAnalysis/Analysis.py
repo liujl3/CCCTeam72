@@ -41,18 +41,40 @@ def tweets_count(df):
     full_name = city_df['full_name']
     city = full_name.str.split(',', expand=True)
     city_state = pd.DataFrame({'full_name': full_name, 'city': city.icol(0), 'state': city.icol(1)})
-    city_df = pd.merge(city_df, city_df, on='full_name')
+    city_df = pd.merge(city_df, city_state, on='full_name')
     return city_df
 
 
 def data_combine(tweet_df, aurin_df):
     geolocator = Nominatim()
-    latitude = aurin_df['latitude'].values.tolist()
-    longitude = aurin_df['longitude'].values.tolist()
-    citys_hospital = pd.DataFrame({'state': aurin_df['state'], 'coordinate': [longitude, latitude]})  # 对应不到市一级，名字不一样
-    hospital_num = citys_hospital.groupby['state']
+    latitude = aurin_df[' latitude'].values.tolist()
+    longitude = aurin_df[' longitude'].values.tolist()
+    state = state_code[aurin_df[' state']]
+    coordinates = []
+    city_list = tweet_df['city'].values.tolist()
+    city_aurin = []
+    for i in range(len(latitude)):
+        hasCity = False
+        city_name = geolocator.reverse(str(latitude) + "," + str(longitude))
+        coordinates.append([longitude[i], latitude[i]])
+        for j in range(len(city_list)):
+            if city_list[j] in city_name.address:
+                city_aurin.append(city_list[j])
+                hasCity = True
+                break
+
+        if not hasCity:
+            city_aurin.append('Unknown')
+
+    full_name = []
+    for i in range(city_aurin):
+        full_name.append(city_aurin[i] + ',' + state[i])
+
+    citys_hospital = pd.DataFrame(
+        {'full_name': full_name, 'city': city_aurin, 'state': state, 'coordinate': coordinates})
+    hospital_num = citys_hospital.groupby['city']
     new_aurin_df = pd.DataFrame(hospital_num)['coordinate'].reset_index(name="Hospital_Num")
-    final_df = pd.merge(tweet_df, new_aurin_df, on='state')
+    final_df = pd.merge(tweet_df, new_aurin_df, on='city')
 
     return final_df
 
