@@ -23,12 +23,12 @@ def gather(db):
     coordinates = []
     ids = []
     geo = Nominatim()
-    for id in db:  # 这里应该有个mapreduce的视图
-        content = db[id]
-        if content['id'] not in ids:
-            ids.append(content['id'])
-            coordinates.append(content['bounding_box']['coordinates'])
-            city.append(content["full_name"])
+    for item in db.view("_design/newDesign/_view/new-view"):
+        tweet_id = db[id]
+        if tweet_id not in ids:
+            ids.append(tweet_id)
+            coordinates.append(item.place['bounding_box']['coordinates'])
+            city.append(item.place["full_name"])
 
     d = {'full_name': city, 'coordinates': coordinates}
     df = pd.DataFrame(data=d)

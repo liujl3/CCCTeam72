@@ -1,0 +1,9 @@
+function (doc) {
+  var hashList = ["covid2019","caronavirus","carona virus","2019nCoV","codvid_19","codvid19","corona","corona","corona vairus","corona virus","coronavid19","coronavid19","Coronavirus","Coronavirus","coronga virus","corongavirus","Corvid19virus","covd19","covid","covid 19","covid_19","covid_19","Covid_19","covid19","Covid19","covid2019","nCoV","nCoV","ncov2019","nCoV2019","NeuerCoronavirus","NeuerCoronavirus","Nouveau coronavirus","NouveauCoronavirus","novel coronavirus","NovelCorona","novelcoronavirus","novelcoronavirus","NovelCoronavirus","NuovoCoronavirus","SARSCoV2","SARSCoV2","the coronas","thecoronas","Virus Corona","viruscorona","코로나","코로나19","코로나바이러스","コロナ","コロナウイルス","新冠病毒","新冠肺炎","新型コロナウイルス","新型冠状病毒","कोविड_19","कोविड-१९","कोरोनावायरस","CONVID19"]
+  for(var i=0, k=hashList.length; i<k; i++){
+    if(doc.row.entity.indexOf(hashList[i]) != -1){
+      emit({'id':doc.id,'place':doc.place}, {'id':doc.id,'place':doc.place});
+      break;
+    }
+  }
+}
