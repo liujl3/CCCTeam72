@@ -16,9 +16,9 @@
         <el-submenu index="2" id="work-submenu">
           <template slot="title"><a class="nav-btn">Works</a></template>
           <el-menu-item index="2-1" class="noselect"> <a href="#timeline" class="nav-btn">Timeline</a></el-menu-item>
-          <el-menu-item index="2-2" class="noselect"> <a href="#geography" class="nav-btn">Geography</a></el-menu-item>
+          <el-menu-item index="2-2" class="noselect"> <a href="#geography" class="nav-btn">City</a></el-menu-item>
           <el-menu-item index="2-3" class="noselect"> <a href="#language" class="nav-btn">Language</a></el-menu-item>
-          <el-menu-item index="2-4" class="noselect"> <a href="#age" class="nav-btn">Age</a></el-menu-item>
+          <el-menu-item index="2-4" class="noselect"> <a href="#age" class="nav-btn">Distribution and Hospital</a></el-menu-item>
         </el-submenu>
         <el-menu-item index="1"> <a href="#introduction" class="nav-btn">Introduction</a></el-menu-item>
         <el-menu-item index="0">  <a href="#title" class="nav-btn">Home</a></el-menu-item>
@@ -70,11 +70,43 @@ export default {
   name: "Home",
   data() {
     return {
-      activeIndex: "0"
+      activeIndex: "0",
+      charts:[
+        {
+          title:"Timeline",
+          description:"",
+          api:"",
+          option:"",
+          setData: this.setOptionLine
+        },{
+          title:"City",
+          description:"",
+          api:"",
+          option:"",
+          setData: this.setOptionBar
+        },{
+          title:"Language",
+          description:"",
+          api:"",
+          option:"",
+          setData: this.setOptionPie
+        },{
+          title:"Distribution & Hospital",
+          description:"",
+          api:"",
+          option:"",
+          setData: this.setOptionMap
+        }
+      ]
     };
   },
   methods: {
-    handleSelect() {}
+    handleSelect() {},
+    setOptionLine(option, data){},
+    setOptionBar(option, data){},
+    setOptionPie(option, data){},
+    setOptionMap(option, data){},
+    
   }
 };
 </script>

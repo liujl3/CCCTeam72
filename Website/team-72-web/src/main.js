@@ -5,10 +5,12 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
-import '../theme/index.css'
+import '../theme/index.css';
+import echarts from "echarts";
 
-Vue.use(ElementUI, {locale})
-Vue.config.productionTip = false
+Vue.use(ElementUI, {locale});
+Vue.config.productionTip = false;
+Vue.prototype.$echarts = echarts;
 
 /* eslint-disable no-new */
 new Vue({
