@@ -13,12 +13,14 @@ parameters: None
     
     "xAxis": ["05/10", "05/11", "05/12", "05/13", "05/14", "05/15", "05/16"],
     "data": [
-        {name: "Total", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]},
-        {name: "NSW", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]},
-        {name: "QLD", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]},
-        {name: "TAS", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]},
-        {name: "VIC", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]},
-        {name: "WA", type: "line", stack: "volume", data: [100,100,100,100,100,100,100]}
+        {
+            "name": "Total", "type": "line", "stack": "volume", 
+         	"data": [100,100,100,100,100,100,100]
+        },
+        {
+            "name": "Total", "type": "line", "stack": "volume", 
+         	"data": [100,100,100,100,100,100,100]
+        }
     ]
 }
 ```
@@ -28,6 +30,8 @@ parameters: None
 method: GET
 
 parameters: None
+
+Response:
 
 ```json
 {
@@ -61,6 +65,8 @@ method: GET
 
 parameters: None
 
+Response:
+
 ```json
 {
     "status": true,
@@ -79,6 +85,8 @@ method: GET
 
 parameters: None
 
+Response:
+
 ```json
 {
     "status": true,
@@ -96,3 +104,4 @@ parameters: None
     ]
 }
 ```
+
