@@ -12,7 +12,7 @@ state_code = {'QLD': 'Queensland', 'NT': 'Northern Territory', 'WA': 'Western Au
 
 
 def connect_database(database_name):
-    couch = couchdb.Server('http://admin:12345@127.0.0.1:5984//')
+    couch = couchdb.Server('http://admin:12345@45.113.235.44:5984//')
     db = couch[database_name]
 
     return db
@@ -97,7 +97,7 @@ def data_combine(tweet_df, aurin_df):
 
 
 def save_result(final_df, database_name):
-    couch = couchdb.Server('http://admin:12345@127.0.0.1:5984//')
+    couch = couchdb.Server('http://admin:12345@45.113.235.44:5984//')
 
     if database_name in couch:
         del couch[database_name]
