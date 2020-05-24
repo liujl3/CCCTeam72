@@ -24,9 +24,11 @@ def gather(db):
     ids = []
     lang = []
     geo = Nominatim()
+    count = 0
     for item in db.view("_design/newDesign/_view/new-view"):
         tweet_id = item.value['id']
         if tweet_id not in ids:
+            count += 1
             ids.append(tweet_id)
             longitude = 0
             latitude = 0
@@ -45,6 +47,7 @@ def gather(db):
     city_lang = dlf.groupby(['city','state','lang']).count()
     clf = pd.DataFrame(city_lang)["count"].reset_index(name="Count")
     save_result(clf, "city_lang_results")
+    print(count)
 #city lang state count
     return df
 
@@ -105,6 +108,8 @@ def save_result(final_df, database_name):
         couch = couch.create(database_name)
 
     final_json = final_df.to_json(orient="columns", force_ascii=False)
+    with open(database_name+".txt", "w") as f:
+        f.write(final_json)
     couch.save(json.loads(final_json))
 
 
