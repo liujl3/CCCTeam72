@@ -9,7 +9,8 @@ import requests
 
 state_code = {'QLD': 'Queensland', 'NT': 'Northern Territory', 'WA': 'Western Australia', 'SA': 'South Australia',
               'NSW': 'New South Wales', 'VIC': 'Victoria', 'TAS': 'Tasmania', 'ACT': 'Australian Capital Territory'}
-
+state_name = {'Queensland','Northern Territory','Western Australia','South Australia','New South Wales','Victoria',
+              'Tasmania','Australian Capital Territory'}
 
 def connect_database(database_name):
     couch = couchdb.Server('http://admin:123456@45.113.235.44:5984//')
