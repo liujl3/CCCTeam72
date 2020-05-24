@@ -67,6 +67,41 @@ def tweets_count(df):
     return city_df
 # full_name city state Tweets_Num Hospital_Num
 
+def tweets_deal(db):
+    full_name = []
+    coordinates = []
+    ids = []
+    city = []
+    state = []
+    time_date = []
+    time_second = []
+    count = 0
+    for item in db.view("_design/newDesign/_view/coording"):
+        tweet_id = item.value['id']
+        if tweet_id not in ids:
+            count += 1
+            ids.append(tweet_id)
+            coordinates.append(item.value['coordinates'])
+            city.append(item.value['city'])
+            state.append(item.value['state'])
+            this_date = datetime.datetime.strptime(item.value['time'], "%a %b %d %H:%M:%S %z %Y")
+            print(this_date.date())
+            time_date.append(this_date.date())
+            time_second.append(time.mktime(this_date.timetuple()))
+
+    id_str = []
+    for i in range(len(ids)):
+        id_str.append(str(ids[i]))
+
+    df_coor = pd.DataFrame({'id': id_str, 'coordinate': coordinates})
+    save_result(df_coor, 'tweet_coord')
+    df_day_state = pd.DataFrame({'state': state, 'day': time_date, 'second': time_second, 'city': city})
+    print(df_day_state)
+    day_state = df_day_state.groupby(['state', 'day','second']).count()
+    print(day_state)
+    df_day_state = pd.DataFrame(day_state)["city"].reset_index(name="Tweets_Num")
+    print(df_day_state)
+    save_result(df_day_state, 'day_state_tweets')
 
 def data_combine(tweet_df, aurin_df):
     geolocator = Nominatim()
@@ -124,6 +159,7 @@ def main():
     result_database = 'result'
     db = connect_database(resource_database)
     tweet_df = gather(db)
+    tweets_deal(db)
     count_df = tweets_count(tweet_df)
     aurin_file = pd.read_csv('Hospital.csv')
     aurin_df = pd.DataFrame(aurin_file)
