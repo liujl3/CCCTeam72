@@ -1,98 +1,76 @@
-#!flask/bin/python
-from flask import Flask, jsonify
-
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import couchdb
 app = Flask(__name__)
 
-data = [
-    {
-    ## timeline_data
-        "status": True,
-        "message": "error message",
-        
-        "xAxis": ["05/10", "05/11", "05/12", "05/13", "05/14", "05/15", "05/16"],
-        "data": [
-            {
-                "name": "Total", "type": "line", "stack": "volume", 
-                "data": [100,100,100,100,100,100,100]
-            },
-            {
-                "name": "Total", "type": "line", "stack": "volume", 
-                "data": [100,100,100,100,100,100,100]
-            }
-        ]
-    },
-    {
-    # city_data
-        "status": True,
-        "message": "error message",
-        
-        "data":[
-            {
-                "cat": "Total", 
-                "data":[
-                    {"name":"Melbourne","value":1200},
-                    {"name":"Melbourne","value":1200},
-                    {"name":"Melbourne","value":1200}
-                ]
-            },
-            {
-                "cat": "NSW", 
-                "data":[
-                    {"name":"Melbourne","value":1200},
-                    {"name":"Melbourne","value":1200},
-                    {"name":"Melbourne","value":1200}
-                ]
-            }
-        ]
-    },
-    # lang_data
-    {
-        "status": True,
-        "message": "error message",
-        
-        "data":[
-            {"name":"English","value":1200},
-            {"name":"Chinese","value":1200}
-        ]
-    },
-    # dot_data
-    {
-        "status": True,
-        "message": "error message",
-        
-        "tweets":[
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"}
-        ],
-        "hospitals":[
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-            {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"}
-        ]
-    }
-]
 
-@app.route('/api/data/<string:name>', methods=['GET'])
-def get_data(name):
-    if name == 'timeline':
-        return jsonify({'timeline_data': data[0]})
-    elif name == 'city':
-        return jsonify({'city_data': data[1]})
-    elif name == 'lang':
-        return jsonify({'city_data': data[2]})
-    elif name == 'dot':
-        return jsonify({'city_data': data[3]})
+
+
+database_name = "city_lang_results"
+database_host = "http://admin:123456@45.113.235.44:80/"
+database_server = couchdb.Server(database_host)
+db = database_server["city_lang_results"]
+
+
+temp_response =[{
+    "status": True,
+    "message": "error message",
+    
+    "data":[]
+    }]
+
+
+
+
+def count_lang(db):
+    response = temp_response
+    sum = {}
+    for index in db['lang']:
+        language = db['lang'][index]
+        num = db['Count'][index]
+        if language in sum.keys():
+            sum[language] += num
+        else:
+            sum[language] = num
+    
+
+    other_lang = {'name': '','value':0}
+    for word in sum.keys():
+        if word in lang_code.keys():
+            for lang in lang_code.keys():
+                tmp = {}
+                if word == lang:
+                    tmp['name'] = lang_code[lang]
+                    tmp['value'] = sum[word]
+                    response['data'].append(tmp)
+        else:
+            other_lang['name'] = 'Others'
+            other_lang['value'] += sum[word]
+    response['data'].append(other_lang)
+    return response
+
+
+
+@app.route('/')
+def index():
+    return 'hello'
+
+@app.route('/lang_data', methods = ['GET'])
+def get_timeline():
+    try:
+        reponse = count_lang(db)
+    except e:
+        response['status'] = False
+        response['message'] = e
     else:
-        return jsonify({'Error! Data not found!'})
+        response['status'] = True
+        response['message'] = 'None'
+
+
+        
+        return response
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
-
-
-
+    app.run(debug=True,host='0.0.0.0',port = 5000)
