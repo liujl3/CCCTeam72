@@ -75,7 +75,7 @@ def data_combine(tweet_df, aurin_df):
         city_name = geolocator.reverse(str(latitude[i]) + "," + str(longitude[i]))
         coordinates.append([longitude[i], latitude[i]])
         for j in range(len(city_list)):
-            if city_list[j] in city_name.address:
+            if city_list[j] != 'Australia' and city_list[j] in city_name.address:
                 city_aurin.append(city_list[j])
                 hasCity = True
                 break
@@ -88,7 +88,6 @@ def data_combine(tweet_df, aurin_df):
         full_name.append(city_aurin[i]+','+state[i])
 
     citys_hospital = pd.DataFrame({'full_name': full_name,'city': city_aurin, 'state': state, 'coordinate': coordinates})
-    print(citys_hospital)
     hospital_num = citys_hospital.groupby(['city']).count()
     new_aurin_df = pd.DataFrame(hospital_num)['coordinate'].reset_index(name="Hospital_Num")
     final_df = pd.merge(tweet_df, new_aurin_df, on='city')
