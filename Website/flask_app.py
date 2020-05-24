@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 import couchdb
 app = Flask(__name__)
@@ -12,13 +13,22 @@ database_server = couchdb.Server(database_host)
 db = database_server["city_lang_results"]
 
 
-temp_response =[{
-    "status": True,
-    "message": "error message",
-    
+temp_response ={
     "data":[]
-    }]
+    }
 
+lang_code = {"en": "English (en)", "ar": "Arabic (ar)", "bn": "Bengali (bn)",
+             "cs": "Czech (cs)","da": "Danish (da)","de": "German (de)", 
+             "el": "Greek (el)", "es": "Spanish (es)", "fa": "Persian (fa)",
+             "fi": "Finnish (fi)","fil": "Filipino (fil)", "fr": "French (fr)", 
+             "he": "Hebrew (he)", "hi": "Hindi (hi)","hu": "Hungarian (hu)",
+             "id": "Indonesian (id)","it": "Italian (it)", "ja": "Japanese (ja)",
+             "ko": "Korean (ko)","msa": "Malay (msa)","nl": "Dutch (nl)", 
+             "no": "Norwegian (no)", "pl": "Polish (pl)", "pt": "Portuguese (pt)",
+             "ro": "Romanian (ro)","ru": "Russian (ru)", "sv": "Swedish (sv)", 
+             "th": "Thai (th)", "tr": "Turkish (tr)","uk": "Ukrainian (uk)",
+             "ur": "Urdu (ur)", "vi": "Vietnamese (vi)","zh": "Chinese (zh)",
+             "zh-cn": "Chinese(cn)","zh-tw": "Chinese(cn)"}
 
 
 
@@ -57,18 +67,22 @@ def index():
 
 @app.route('/lang_data', methods = ['GET'])
 def get_timeline():
+    result = {}
+    for i in db:
+        data = db[i]
+    #result = count_lang(data)
     try:
-        reponse = count_lang(db)
-    except e:
-        response['status'] = False
-        response['message'] = e
+        result = count_lang(data)
+    except Exception as e:
+        result['status'] = 'false'
+        result['message'] = e
     else:
-        response['status'] = True
-        response['message'] = 'None'
+        result['status'] = 'true'
+        result['message'] = 'None'
+    return result
 
+    
 
-        
-        return response
 
 
 
