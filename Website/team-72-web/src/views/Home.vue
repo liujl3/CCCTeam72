@@ -50,15 +50,12 @@
       introduction
       introduction
       introduction
-      introduction
-      introduction
-      introduction
       </div>
     <!-- Work -->
     <!-- time -->
-    <!-- geo -->
+    <!-- city -->
     <!-- lang -->
-    <!-- age -->
+    <!-- a -->
     <!-- Team -->
   <div id="team">
     <el-divider></el-divider>

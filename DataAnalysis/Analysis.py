@@ -12,7 +12,7 @@ state_code = {'QLD': 'Queensland', 'NT': 'Northern Territory', 'WA': 'Western Au
 
 
 def connect_database(database_name):
-    couch = couchdb.Server('http://admin:12345@45.113.235.44:5984//')
+    couch = couchdb.Server('http://admin:123456@45.113.235.44:5984//')
     db = couch[database_name]
 
     return db
@@ -42,7 +42,7 @@ def gather(db):
     city = pd.DataFrame({'content':full_name})['content'].str.split(',', expand=True)
     data_lang = {'city': city[0].values.tolist(), 'state': city[1].values.tolist(), 'coordinates': coordinates, 'lang': lang,'count':ids}
     dlf = pd.DataFrame(data=data_lang)
-    city_lang = dlf.groupby(['city','lang']).count()
+    city_lang = dlf.groupby(['city','state','lang']).count()
     clf = pd.DataFrame(city_lang)["count"].reset_index(name="Count")
     save_result(clf, "city_lang_results")
 #city lang state count
@@ -97,7 +97,7 @@ def data_combine(tweet_df, aurin_df):
 
 
 def save_result(final_df, database_name):
-    couch = couchdb.Server('http://admin:12345@45.113.235.44:5984//')
+    couch = couchdb.Server('http://admin:123456@45.113.235.44:5984//')
 
     if database_name in couch:
         del couch[database_name]
