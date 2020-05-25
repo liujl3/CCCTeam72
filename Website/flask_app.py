@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import jsonify
-from flask_sqlalchemy import SQLAlchemy
 import couchdb
 app = Flask(__name__)
 
@@ -10,8 +9,8 @@ app = Flask(__name__)
 database_name = "city_lang_results"
 database_host = "http://admin:123456@45.113.235.44:80/"
 database_server = couchdb.Server(database_host)
-db = database_server["city_lang_results"]
-
+db_lang = database_server["city_lang_results"]
+db_timeline = database_server["day_state_tweets"]
 
 temp_response ={
     "data":[]
@@ -32,7 +31,7 @@ lang_code = {"en": "English (en)", "ar": "Arabic (ar)", "bn": "Bengali (bn)",
 
 
 
-def count_lang(db):
+def clear_lang(db):
     response = temp_response
     sum = {}
     for index in db['lang']:
@@ -44,18 +43,20 @@ def count_lang(db):
             sum[language] = num
     
 
-    other_lang = {'name': '','value':0}
-    for word in sum.keys():
-        if word in lang_code.keys():
-            for lang in lang_code.keys():
-                tmp = {}
-                if word == lang:
-                    tmp['name'] = lang_code[lang]
-                    tmp['value'] = sum[word]
-                    response['data'].append(tmp)
+    other_lang = {'name': 'Others','value':0}
+    other = []
+    for lang in sum.keys():
+        tmp = {}
+        if lang in lang_code.keys():
+            
+            tmp['name'] = lang_code[lang]
+            tmp['value'] = sum[lang]
+            print(tmp)
+            response['data'].append(tmp)
+            
         else:
-            other_lang['name'] = 'Others'
-            other_lang['value'] += sum[word]
+            other_lang['value'] += sum[lang]
+
     response['data'].append(other_lang)
     return response
 
@@ -66,22 +67,27 @@ def index():
     return 'hello'
 
 @app.route('/lang_data', methods = ['GET'])
-def get_timeline():
+def get_lang():
     result = {}
-    for i in db:
-        data = db[i]
+    for i in db_lang:
+        data = db_lang[i]
     #result = count_lang(data)
     try:
-        result = count_lang(data)
+        result = clear_lang(data)
     except Exception as e:
         result['status'] = 'false'
         result['message'] = e
     else:
         result['status'] = 'true'
         result['message'] = 'None'
-    return result
-
     
+    return jsonify(result)
+
+
+@app.route('/timeline_data', methods = ['GET'])
+def get_timeline(): 
+    for i in db_timeline:
+        return db_timeline[i]
 
 
 
