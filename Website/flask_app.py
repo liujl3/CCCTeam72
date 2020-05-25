@@ -71,6 +71,64 @@ def clear_timeline(db):
                 
             
     return result
+## /city_data
+
+
+
+def clear_city(city):
+    state_6 = ["New South Wales","Victoria","Queensland","Western Australia","South Australia","Tasmania"]
+
+    result = {}
+    state_sum = []
+    city_sum =[]
+    for name in state_6:
+        
+        
+        state_data = {"name":'',"value":0}
+        
+        
+        detail_data = {"cat":'',"data":''}
+        
+        full_name = city["full_name"]
+        
+        check_city = []
+        cities = []
+        
+        for index in full_name.keys():
+            city_data = {"name":'',"value":0}
+            city_name = full_name[index].split(',')[0]
+            #print(city_name)
+            state_name = full_name[index].split(',')[1]
+            tweets_num = city["Tweets_Num"][index]
+            
+            if  name.strip() == state_name.strip():
+
+                state_data["name"] = name
+                state_data["value"]+= tweets_num
+                
+                if city_name not in check_city:
+                    check_city.append(city_name)
+                    
+                    city_data["name"] = city_name
+                    city_data["value"] += tweets_num
+                else:
+                    city_data["value"] += tweets_num
+                
+                cities.append(city_data)
+
+        detail_data["cat"] = state_name
+        detail_data["data"] = cities
+        city_sum.append(detail_data)
+
+        state_sum.append(state_data)
+    final_data = []
+    final_data.append(state_sum)
+    for item in city_sum:
+        final_data.append(item)
+    result["data"] = final_data
+        
+
+    return result
 
     
 ## /lang_data
@@ -144,7 +202,7 @@ def get_city():
         data_city = db_city[i]
     #result = count_lang(data)
     try:
-        result_city = clear_timeline(data_timeline)
+        result_city = clear_city(data_city)
     except Exception as e:
         result_city['status'] = 'false'
         result_city['message'] = e
@@ -152,7 +210,7 @@ def get_city():
         result_city['status'] = 'true'
         result_city['message'] = 'None'
     
-    return data_city
+    return result_city
 
 @app.route('/lang_data', methods = ['GET'])
 def get_lang():
