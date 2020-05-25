@@ -181,10 +181,12 @@ def clear_dot(dot):
     for index in dot["coordinate"].keys():
         tweet_data = {}
         coord = dot["coordinate"][index]
-        tweet_data["coordinate"] = coord
-        tweets.append(tweet_data)
+#         tweet_data["coordinate"] = coord
+        tweets.append(coord)
     result["tweets"] = tweets
     return result
+        
+        
 
 
 
