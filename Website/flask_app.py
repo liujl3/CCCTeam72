@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import jsonify
+from flask import render_template
 import couchdb
 app = Flask(__name__)
 
@@ -192,7 +193,7 @@ def clear_dot(dot):
 
 @app.route('/')
 def index():
-    return 'hello'
+    return render_template("team72-web/dist/index.html")
 
 
 
