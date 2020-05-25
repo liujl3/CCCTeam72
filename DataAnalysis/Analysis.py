@@ -358,6 +358,8 @@ def data_combine(tweet_df, aurin_df):
     for i in range(len(city_aurin)):
         full_name.append(city_aurin[i]+', '+state[i])
 
+    hops_data = pd.DataFrame({'coordinates': coordinates})
+    save_result(hops_data, 'hosp_coord')
     citys_hospital = pd.DataFrame({'full_name': full_name,'city': city_aurin, 'state': state, 'coordinate': coordinates})
     hospital_num = citys_hospital.groupby(['full_name']).count()
     new_aurin_df = pd.DataFrame(hospital_num)['coordinate'].reset_index(name="Hospital_Num")
