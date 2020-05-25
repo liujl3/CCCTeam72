@@ -11,29 +11,42 @@ database_host = "http://admin:123456@45.113.235.44:80/"
 database_server = couchdb.Server(database_host)
 
 
-
-
+state_6 = ["New South Wales","Victoria","Queensland","Western Australia","South Australia","Tasmania"]
+states = ["New South Wales","Victoria","Queensland","Western Australia","South Australia","Tasmania",
+          "Australian Capital Territory","Northern Territory","Jervis Bay Territory"]
 
 ## /timeline_data
 
-
+lang_code = {"en": "English (en)", "ar": "Arabic (ar)", "bn": "Bengali (bn)",
+         "cs": "Czech (cs)","da": "Danish (da)","de": "German (de)", 
+         "el": "Greek (el)", "es": "Spanish (es)", "fa": "Persian (fa)",
+         "fi": "Finnish (fi)","fil": "Filipino (fil)", "fr": "French (fr)", 
+         "he": "Hebrew (he)", "hi": "Hindi (hi)","hu": "Hungarian (hu)",
+         "id": "Indonesian (id)","it": "Italian (it)", "ja": "Japanese (ja)",
+         "ko": "Korean (ko)","msa": "Malay (msa)","nl": "Dutch (nl)", 
+         "no": "Norwegian (no)", "pl": "Polish (pl)", "pt": "Portuguese (pt)",
+         "ro": "Romanian (ro)","ru": "Russian (ru)", "sv": "Swedish (sv)", 
+         "th": "Thai (th)", "tr": "Turkish (tr)","uk": "Ukrainian (uk)",
+         "ur": "Urdu (ur)", "vi": "Vietnamese (vi)","zh": "Chinese (zh)",
+         "zh-cn": "Chinese(cn)","zh-tw": "Chinese(cn)"}
 
 def clear_timeline(db):
-    states = ["New South Wales","Victoria","Queensland","Western Australia","South Australia","Tasmania",
-          "Australian Capital Territory","Northern Territory","Jervis Bay Territory"]
+
 
     result  ={}
     axis_list = []
     for time in db["day"].values():
         if time not in axis_list:
-            axis_list.append(time)       
+            axis_list.append(time)   
+    axis_list.sort()
+
     data_piece = []
     
     for name in states:
         # initialise
         print(name)
         date_value = [0 for n in range(len(axis_list))]
-        state_data = {"name":'',"type":"line","stack":"volume","data":date_value}
+        state_data = {"name":'',"type":"line","data":date_value}
         
         state_data["name"] = name
         for index in db["state"].keys():
@@ -62,18 +75,7 @@ def clear_timeline(db):
     
 ## /lang_data
 def clear_lang(db):
-    lang_code = {"en": "English (en)", "ar": "Arabic (ar)", "bn": "Bengali (bn)",
-             "cs": "Czech (cs)","da": "Danish (da)","de": "German (de)", 
-             "el": "Greek (el)", "es": "Spanish (es)", "fa": "Persian (fa)",
-             "fi": "Finnish (fi)","fil": "Filipino (fil)", "fr": "French (fr)", 
-             "he": "Hebrew (he)", "hi": "Hindi (hi)","hu": "Hungarian (hu)",
-             "id": "Indonesian (id)","it": "Italian (it)", "ja": "Japanese (ja)",
-             "ko": "Korean (ko)","msa": "Malay (msa)","nl": "Dutch (nl)", 
-             "no": "Norwegian (no)", "pl": "Polish (pl)", "pt": "Portuguese (pt)",
-             "ro": "Romanian (ro)","ru": "Russian (ru)", "sv": "Swedish (sv)", 
-             "th": "Thai (th)", "tr": "Turkish (tr)","uk": "Ukrainian (uk)",
-             "ur": "Urdu (ur)", "vi": "Vietnamese (vi)","zh": "Chinese (zh)",
-             "zh-cn": "Chinese(cn)","zh-tw": "Chinese(cn)"}
+
     temp_response ={
     "data":[]
     }
@@ -135,7 +137,7 @@ def get_timeline():
 @app.route('/city_data', methods = ['GET'])
 def get_city(): 
 
-    db_city = database_server["results"]
+    db_city = database_server["result"]
 
     result_city= {}
     for i in db_city:
