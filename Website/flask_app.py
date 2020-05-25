@@ -1,8 +1,8 @@
 from flask import Flask
 from flask import jsonify
-from flask import render_template
+from flask import send_from_directory
 import couchdb
-app = Flask(__name__)
+app = Flask(__name__,static_folder="./team-72-web/dist/static/")
 
 
 
@@ -191,9 +191,13 @@ def clear_dot(dot):
 
 
 
-@app.route('/')
+@app.route('/', methods = ['GET'])
 def index():
-    return render_template("team-72-web/dist/index.html")
+    return send_from_directory("./team-72-web/dist/", "index.html")
+
+@app.route('/home', methods = ['GET'])
+def home():
+    return send_from_directory("./team-72-web/dist/", "index.html")
 
 
 
