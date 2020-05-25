@@ -43,7 +43,7 @@ def clear_lang(db):
             sum[language] = num
     
 
-    other_lang = {'name': 'Others','value':0}
+    other_lang = {'name': 'Unknown','value':0}
     other = []
     for lang in sum.keys():
         tmp = {}
