@@ -193,7 +193,7 @@ def clear_dot(dot):
 
 @app.route('/')
 def index():
-    return render_template("team72-web/dist/index.html")
+    return render_template("team-72-web/dist/index.html")
 
 
 
