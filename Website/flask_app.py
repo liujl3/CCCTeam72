@@ -220,7 +220,7 @@ def get_city():
         result_city['status'] = 'true'
         result_city['message'] = 'None'
     
-    return result_city
+    return jsonify(result_city)
 
 @app.route('/lang_data', methods = ['GET'])
 def get_lang():
