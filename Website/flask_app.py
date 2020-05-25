@@ -110,24 +110,6 @@ def clear_lang(db):
 def index():
     return 'hello'
 
-@app.route('/lang_data', methods = ['GET'])
-def get_lang():
-    db_lang = database_server["city_lang_results"]
-
-    result = {}
-    for i in db_lang:
-        data_lang = db_lang[i]
-    #result = count_lang(data)
-    try:
-        result = clear_lang(data_lang)
-    except Exception as e:
-        result['status'] = 'false'
-        result['message'] = e
-    else:
-        result['status'] = 'true'
-        result['message'] = 'None'
-    
-    return jsonify(result)
 
 
 @app.route('/timeline_data', methods = ['GET'])
@@ -135,20 +117,59 @@ def get_timeline():
 
     db_timeline = database_server["day_state_tweets"]
 
-    result = {}
+    result_timeline = {}
     for i in db_timeline:
         data_timeline = db_timeline[i]
     #result = count_lang(data)
     try:
-        result = clear_timeline(data_timeline)
+        result_timeline = clear_timeline(data_timeline)
     except Exception as e:
-        result['status'] = 'false'
-        result['message'] = e
+        result_timeline['status'] = 'false'
+        result_timeline['message'] = e
     else:
-        result['status'] = 'true'
-        result['message'] = 'None'
+        result_timeline['status'] = 'true'
+        result_timeline['message'] = 'None'
     
-    return jsonify(result)
+    return jsonify(result_timeline)
+
+@app.route('/city_data', methods = ['GET'])
+def get_city(): 
+
+    db_city = database_server["results"]
+
+    result_city= {}
+    for i in db_city:
+        data_city = db_city[i]
+    #result = count_lang(data)
+    try:
+        result_city = clear_timeline(data_timeline)
+    except Exception as e:
+        result_city['status'] = 'false'
+        result_city['message'] = e
+    else:
+        result_city['status'] = 'true'
+        result_city['message'] = 'None'
+    
+    return data_city
+
+@app.route('/lang_data', methods = ['GET'])
+def get_lang():
+    db_lang = database_server["city_lang_results"]
+
+    result_lang = {}
+    for i in db_lang:
+        data_lang = db_lang[i]
+    #result = count_lang(data)
+    try:
+        result_lang = clear_lang(data_lang)
+    except Exception as e:
+        result_lang['status'] = 'false'
+        result_lang['message'] = e
+    else:
+        result_lang['status'] = 'true'
+        result_lang['message'] = 'None'
+    
+    return jsonify(result_lang)
 
 
 if __name__ == '__main__':
