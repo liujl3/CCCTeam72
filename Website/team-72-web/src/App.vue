@@ -6,7 +6,12 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  beforeCreate(){
+    if(this.$route.path!="/"){
+      this.$router.push("/")
+    }
+  }
 };
 </script>
 

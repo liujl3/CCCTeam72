@@ -41,18 +41,28 @@ Response:
     "data":[
         {
             "cat": "Total", 
-            "data":[
+            "tweets":[
                 {"name":"Melbourne","value":1200},
                 {"name":"Melbourne","value":1200},
                 {"name":"Melbourne","value":1200}
+            ],
+            "hospitals":[
+                {"name":"Melbourne","value":1},
+                {"name":"Melbourne","value":2},
+                {"name":"Melbourne","value":3}
             ]
         },
         {
             "cat": "NSW", 
-            "data":[
+            "tweets":[
                 {"name":"Melbourne","value":1200},
                 {"name":"Melbourne","value":1200},
                 {"name":"Melbourne","value":1200}
+            ],
+            "hospitals":[
+                {"name":"Melbourne","value":1},
+                {"name":"Melbourne","value":2},
+                {"name":"Melbourne","value":3}
             ]
         }
     ]
@@ -93,11 +103,6 @@ Response:
     "message": "error message",
     
     "tweets":[
-        {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-        {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
-        {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"}
-    ],
-    "hospitals":[
         {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
         {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"},
         {"coordinate":[121.15,43], "state": "VIC", "city": "Melbourne"}

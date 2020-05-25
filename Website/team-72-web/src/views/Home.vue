@@ -16,7 +16,7 @@
         </el-menu-item>
         <el-submenu index="Works" id="work-submenu">
           <template slot="title">
-            <a class="nav-btn">Works</a>
+            <a class="nav-btn-default">Works</a>
           </template>
           <el-menu-item index="#timeline" class="noselect">
             <a href="#timeline" class="nav-btn">Timeline</a>
@@ -63,7 +63,8 @@
         different cities and different languages in Australia to the epidemic.
       </p>
       <p>
-        Github Respository：<el-link href="https://github.com/liujl3/CCCTeam72">https://github.com/liujl3/CCCTeam72</el-link>
+        Github repository：
+        <el-link href="https://github.com/liujl3/CCCTeam72">https://github.com/liujl3/CCCTeam72</el-link>
       </p>
     </div>
     <!-- Work -->
@@ -99,6 +100,7 @@
     <div id="map" class="content-container">
       <h2>Map</h2>
       <el-divider></el-divider>
+      <p style="font-size:18px"><span style="color:#aa0000">●</span> Tweets, <span style="color:#00aa00">●</span> Hospitals</p>
       <div id="mapChart" class="chart"></div>
     </div>
     <!-- Team -->
@@ -116,7 +118,8 @@ export default {
       activeIndex: "0",
       selectedState: "Total",
       allCityData: [],
-      cityChart: null
+      cityChart: null,
+      map: null
     };
   },
   methods: {
@@ -144,15 +147,31 @@ export default {
       return data;
     },
     drawCityChart() {
-      console.log("ccc");
       var cityData = [];
+      var hospitalData = [];
       for (var i = 0; i < this.allCityData.length; i++) {
         if (this.allCityData[i].cat == this.selectedState) {
-          cityData = this.allCityData[i].data;
+          cityData = this.allCityData[i].tweets;
+          hospitalData = this.allCityData[i].hospitals;
+          console.log(hospitalData)
           break;
         }
       }
       var cityOption = {
+        title: [
+              {
+                text: "Tweets",
+                left: "20%",
+                textAlign: "center",
+                top: 20
+              },
+              {
+                text: "Hospitals",
+                left: "80%",
+                textAlign: "center",
+                top: 20
+              }
+            ],
         tooltip: {
           trigger: "item",
           formatter: "{b}: {d}%"
@@ -162,7 +181,7 @@ export default {
             name: "city",
             type: "pie",
             radius: ["50%", "70%"],
-            center: ["50%", "60%"],
+            center: ["25%", "60%"],
             avoidLabelOverlap: true,
             label: {
               show: true
@@ -183,6 +202,34 @@ export default {
               show: true
             },
             data: cityData.sort(function(a, b) {
+              return a.value - b.value;
+            })
+          },
+          {
+            name: "city",
+            type: "pie",
+            radius: ["50%", "70%"],
+            center: ["75%", "60%"],
+            avoidLabelOverlap: true,
+            label: {
+              show: true
+            },
+            normal: {
+              textStyle: {
+                fontSize: 24
+              }
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "24",
+                fontWeight: "bold"
+              }
+            },
+            labelLine: {
+              show: true
+            },
+            data: hospitalData.sort(function(a, b) {
               return a.value - b.value;
             })
           }
@@ -245,11 +292,6 @@ export default {
                 "Jervis Bay Territory"
               ]
             },
-            toolbox: {
-              feature: {
-                saveAsImage: {}
-              }
-            },
             grid: {
               left: "3%",
               right: "4%",
@@ -266,7 +308,7 @@ export default {
             yAxis: [
               {
                 type: "value",
-                max:600,
+                max: 600,
                 boundaryGap: [0, "100%"]
               }
             ],
@@ -368,12 +410,86 @@ export default {
         //Request Error
       });
     // map
+    var map = this.$leaflet.map("mapChart", {
+      minZoom: 4,
+      maxZoom: 8,
+      center: [-27.73212, 133.63567],
+      zoom: 5,
+      crs: L.CRS.EPSG3857
+    });
+    this.map = map;
+    this.$leaflet
+      .tileLayer(
+        // "http://webrd01.is.autonavi.com/appmaptile?lang=en&size=1&scl=1&ltype=1&scale=1&style=7&x={x}&y={y}&z={z}"
+        "https://wprd02.is.autonavi.com/appmaptile?lang=en&size=1&style=7&x={x}&y={y}&z={z}&scl=1&ltype=1"
+      )
+      .addTo(map);
+    console.log(this.$ausState);
+    this.$leaflet
+      .geoJSON(this.$ausState, {
+        style: function(feature) {
+          return {
+            color: "#3498db",
+            weight: 2,
+            fillOpacity: 0.2
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          // layer.bindPopup(feature.properties['STATE_NAME']);
+
+          layer
+            .on("mouseover", function(e) {
+              layer.setStyle({
+                weight: 2,
+                fillOpacity: 0.8
+              });
+            })
+            .on("mouseout", function(e) {
+              layer.setStyle({
+                weight: 2,
+                fillOpacity: 0.2
+              });
+            });
+        }
+      })
+      .addTo(map);
+    this.$axios
+      .get("/dot_data")
+      .then(response => {
+        // request success
+        var result = response.data;
+        if (result.status) {
+          for (var i = 0; i < result.tweets.length; i++) {
+            this.$leaflet
+              .circle([result.tweets[i][1], result.tweets[i][0]], {
+                color: "#33330000",
+                fillColor: "#aa0000",
+                fillOpacity: 0.2,
+                radius: 20000
+              })
+              .addTo(this.map);
+          }
+          for (var i = 0; i < result.hospitals.length; i++) {
+            this.$leaflet
+              .circle([result.hospitals[i][1], result.hospitals[i][0]], {
+                color: "#33330000",
+                fillColor: "#00aa00",
+                fillOpacity: 0.5,
+                radius: 10000
+              })
+              .addTo(this.map);
+          }
+        }
+      })
+      .catch(e => {
+        //Request Error
+      });
   }
 };
 </script>
 <style>
 header {
-  z-index: 100;
+  z-index: 100000;
   /* display: -webkit-flex;
   display: inline-flex; */
   /* flex-direction: row; */
@@ -406,6 +522,12 @@ header {
   float: right !important;
 }
 .nav-btn {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0 20px;
+}
+.nav-btn-default {
   color: white;
   text-decoration: none;
 }
@@ -452,5 +574,18 @@ header {
 }
 h3 {
   text-decoration: underline;
+}
+#map {
+  height: 840px;
+}
+#mapChart {
+  height: 768px;
+  border-radius: 0.5em;
+  box-shadow: 0px 0px 5px 0px rgb(202, 202, 202);
+}
+</style>
+<style>
+.el-menu-item {
+  padding: 0;
 }
 </style>

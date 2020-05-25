@@ -8,6 +8,16 @@ import locale from 'element-ui/lib/locale/lang/en'
 import '../theme/index.css';
 import echarts from "echarts";
 import axios from 'axios'
+import leaflet from "leaflet";
+import "leaflet/dist/leaflet.css";
+import ausState from "../static/states.min.json"
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow
+});
+L.Marker.prototype.options.icon = DefaultIcon;
 
 Vue.use(ElementUI, {locale});
 Vue.config.productionTip = false;
@@ -15,6 +25,8 @@ Vue.prototype.$echarts = echarts;
 axios.defaults.publicPath = 'http://45.113.233.244'
 axios.defaults.baseURL = 'http://45.113.233.244'
 Vue.prototype.$axios = axios
+Vue.prototype.$leaflet = leaflet
+Vue.prototype.$ausState = ausState
 
 /* eslint-disable no-new */
 new Vue({
