@@ -86,12 +86,12 @@ def tweets_deal(db):
             state.append(item.value['state'])
             this_date = datetime.datetime.strptime(item.value['time'], "%a %b %d %H:%M:%S %z %Y")
             print(this_date.date())
-            time_date.append(this_date.date())
-            time_second.append(time.mktime(this_date.timetuple()))
+            time_date.append(str(this_date.date()))
+            time_second.append(str(time.mktime(this_date.timetuple())))
 
     id_str = []
     for i in range(len(ids)):
-        id_str.append(str(ids[i]))
+        id_str.append(str(int(ids[i])))
 
     df_coor = pd.DataFrame({'id': id_str, 'coordinate': coordinates})
     save_result(df_coor, 'tweet_coord')
