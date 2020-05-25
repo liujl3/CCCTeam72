@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import jsonify
 import couchdb
-app = Flask(__name__, static_folder="./team-72-web/dist/")
+app = Flask(__name__,static_folder="./team-72-web/dist/static/")
 
 
 database_name = "city_lang_results"
@@ -216,12 +216,12 @@ def read_dot(db_name, key):
 
 @app.route('/', methods=['GET'])
 def index():
-    return app.send_static_file("index.html")
+     return send_from_directory("./team-72-web/dist/", "index.html")
 
 
 @app.route('/home', methods=['GET'])
 def home():
-    return app.send_static_file("index.html")
+     return send_from_directory("./team-72-web/dist/", "index.html")
 
 
 @app.route('/timeline_data', methods=['GET'])
