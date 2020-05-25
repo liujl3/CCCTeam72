@@ -174,6 +174,18 @@ def clear_lang(db):
     response['data'].append(other_lang)
     return response
 
+# /dot_data
+def clear_dot(dot):
+    result = {}
+    tweets = []
+    for index in dot["coordinate"].keys():
+        tweet_data = {}
+        coord = dot["coordinate"][index]
+        tweet_data["coordinate"] = coord
+        tweets.append(tweet_data)
+    result["tweets"] = tweets
+    return result
+
 
 
 @app.route('/')
@@ -245,20 +257,21 @@ def get_lang():
 def get_dot():
     db_dot = database_server["tweet_coord"]
 
-    result_lang = {}
+    result_dot = {}
     for i in db_dot:
-        data_dot = db_lang[i]
-    #result = count_lang(data)
+        data_dot = db_dot[i]
+
     try:
-        result_lang = clear_lang(data_dot)
+        result_dot = clear_dot(data_dot)
     except Exception as e:
-        result_lang['status'] = 'false'
-        result_lang['message'] = e
+        result_dot['status'] = 'false'
+        result_dot['message'] = e
     else:
-        result_lang['status'] = 'true'
-        result_lang['message'] = 'None'
+        result_dot['status'] = 'true'
+        result_dot['message'] = 'None'
     
-    return jsonify(result_lang)
+    return jsonify(result_dot)
+
 
 
 if __name__ == '__main__':
