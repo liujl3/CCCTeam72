@@ -1,0 +1,1 @@
+ansible-playbook ~/CCCTeam72/Automation/playbooks/process.yml

@@ -1,1 +1,54 @@
+- hosts: webserver
+  gather_facts: yes
+  remote_user: ec2-user
+  tasks:
+    - name: Update packages
+      become: yes
+      become_method: sudo
+      yum:
+        name: "*"
+        state: latest
 
+    - name: Install Nginx
+      become: yes
+      become_method: sudo
+      yum:
+        name: nginx
+        state: latest
+    
+    - name: Configure Nginx reverse proxy
+      become: yes
+      become_method: sudo
+      copy:
+        src: ../nginx.conf
+        dest: /etc/nginx/nginx.conf
+        mode: preserve
+    
+    - name: Run nginx
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        nginx 
+        
+    - name: Install python3
+      become: yes
+      become_method: sudo
+      yum:
+        name: python3
+        state: latest
+    
+    - name: Install pip requirements
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        pip3 install ../requirements.txt
+
+    - name: Run flask api server
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        nohup python3 ~/CCCTeam72/Website/flask_app.py &
+    

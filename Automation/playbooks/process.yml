@@ -1,0 +1,17 @@
+- hosts: webserver
+  gather_facts: yes
+  remote_user: ec2-user
+  tasks:
+    - name: Run harvest
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        python3 ~/CCCTeam72/Harvest/search.py
+
+    - name: Run analysis
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        python3 ~/CCCTeam72/DataAnalysis/Analysis.py

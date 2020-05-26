@@ -1,1 +1,93 @@
+---
+- hosts: couchdb
+  gather_facts: yes
+  remote_user: ec2-user
+  tasks: 
+    - name: Update packages
+      become: yes
+      become_method: sudo
+      yum:
+        name: "*"
+        state: latest
 
+    - name: Enabling the Apache CouchDB package repository
+      become: yes
+      become_method: sudo
+      blockinfile:
+        path: /etc/yum.repos.d/bintray-apache-couchdb-rpm.repo
+        block: |
+          [bintray--apache-couchdb-rpm]
+          name=bintray--apache-couchdb-rpm
+          baseurl=http://apache.bintray.com/couchdb-rpm/el$releasever/$basearch/
+          gpgcheck=0
+          repo_gpgcheck=0
+          enabled=1
+
+    - name: Install CouchDB
+      become: yes
+      become_method: sudo
+      yum:
+        name: couchdb
+        state: latest
+
+    - name: Configure couchdb local settings
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: |
+        cat>/opt/couchdb/etc/local.ini<<EOF
+        [couchdb]
+        uuid = 237754136e1604e3524ac7b2a88add93
+        [chttpd]
+        port = 5984
+        bind_address = 0.0.0.0
+        [couch_httpd_auth]
+        secret = 9efcf41a3686ddb428a5d2fb7e4e005f
+        [admins]
+        admin = 123456
+
+    - name: Configure couchdb cluster settings
+      become: yes
+      become_method: sudo
+      shell:
+        cmd: |
+        cat>/opt/couchdb/etc/vm.args<<EOF
+        -name couchdb@{{ansible_eth0['ipv4']['address']}}
+        -setcookie team72
+        -kernel inet_dist_listen_min 9100
+        -kernel inet_dist_listen_max 9200
+        -kernel error_logger silent
+        -sasl sasl_error_logger false
+        +K true
+        +A 16
+        +Bd -noinput
+        -smp enable
+        -ssl session_lifetime 300
+    
+    - name: Run Couchdb services
+      become: yes
+      become_method: sudo
+      shell: sudo systemctl start couchdb.service
+        
+
+- hosts: maindb
+  gather_facts: yes
+  remote_user: ec2-user
+  tasks:
+    {% for host in groups['app_servers'] %}
+      {% if 'webserver' == {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}%}
+        - name: Enable node {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}
+              shell:
+                cmd: |
+                  curl -X POST -H "Content-Type: application/json" http://admin:123456@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"password", "port": 5984, "node_count": "3", "remote_node": "{{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}", "remote_current_user": "admin", "remote_current_password": "123456" }'
+        - name: Add node {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}
+              shell:
+                cmd: |
+                  curl -X POST -H "Content-Type: application/json" http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "add_node", "host":"{{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}", "port": 5984, "username": "admin", "password":"123456"}'
+      {% endif %}
+    {% endfor %}
+    - name: Finish cluster setting
+              shell:
+                cmd: |
+                  curl -X POST -H "Content-Type: application/json" http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "finish_cluster"}'
+    
