@@ -6,7 +6,7 @@ app = Flask(__name__,static_folder="./team-72-web/dist/static/")
 
 
 database_name = "city_lang_results"
-database_host = "http://admin:123456@45.113.235.44:80/"
+database_host = "http://admin:123456@45.113.235.44:5984/"
 database_server = couchdb.Server(database_host)
 
 

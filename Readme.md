@@ -4,13 +4,13 @@ This project focuses on Australia's tweets related to COVID19, conducts statisti
 
 ## Automation guide
 
-1. Virtual machine operating system: NeCTAR CentOS 7 x86_64.
+1. Virtual machine operating system image: NeCTAR CentOS 7 x86_64.
 
-2. Open port(TCP):
+2. Security Group Open Port(TCP):
 - Database server: 5984, 4369, 9100-9200
 - Web server: 80
 
-3. `cd` to user floder and clone this repository.
+3. `SSH` connect to web server, `cd` to user floder and clone this repository.
 
 4. Write the addresses of the CouchDB server in `Automation/hosts` file.
 
@@ -20,10 +20,13 @@ This project focuses on Australia's tweets related to COVID19, conducts statisti
 
 6. Then run `Automation/deploy.sh` as a system administrator.
 
+## System architecture
+In this project, we use 4 virtual machine on UniMelb Research Cloud, one for web server and data processing, and the other three instances formed a database cluster. After collecting data from tweeter API and processing data by using MapReduce, the API server organizes the data into a web page understandable format and returns it when the web page calls these APIs, and then the web page draws the chart through the corresponding library.
+
 ## Main Technology Stacks
 - **Database**: CouchDB cluster
-- **Harvest**: Twitter development api
+- **Harvest**: Twitter development API
 - **Data Analysis**: MapReduce Views
-- **WebServer**: Flask RESTful api server, Nginx Reverse proxy
+- **WebServer**: Flask RESTful api server, Nginx reverse proxy
 - **Website**: Vue.js singe page application, Element-UI for UI
 - **Data Visualization**: Echarts for charts, leaftlet with GeoJSON for map
