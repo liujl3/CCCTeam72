@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import jsonify
+from flask import send_from_directory
 import couchdb
 app = Flask(__name__,static_folder="./team-72-web/dist/static/")
 

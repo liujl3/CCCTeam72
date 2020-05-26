@@ -1,0 +1,4 @@
+- hosts: couchdb
+  gather_facts: false
+  roles:
+  - role: CouchDB

@@ -107,6 +107,10 @@
     <div id="team" class="content-container">
       <h2>Team</h2>
       <el-divider></el-divider>
+      <h3>Siyuan Wu, 1110062</h3>
+      <h3>Dongfang Wang, 906257</h3>
+      <h3>Decheng Wang, 812203</h3>
+      <h3>Jian Liu, 1010361</h3>
     </div>
   </div>
 </template>
@@ -573,10 +577,10 @@ header {
   height: 640px;
 }
 h3 {
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 #map {
-  height: 840px;
+  height: 960px;
 }
 #mapChart {
   height: 768px;
