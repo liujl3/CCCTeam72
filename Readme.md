@@ -14,11 +14,13 @@ This project focuses on Australia's tweets related to COVID19, conducts statisti
 
 4. Write the addresses of the CouchDB server in `Automation/hosts` file.
 
-5. Save your private key file as `private.pem` and put it in the `Automation` folder, this private key will be used to connect to all database servers, all database server has same account: `admin:123456`.
+5. Change the databse server address in `Website/flask_app.py`.
 
-> *run `Automation/process.sh` to collect and process data (Need to provide Twitter search API access authentication).*
+6. Save your private key file as `private.pem` and put it in the `Automation` folder, this private key will be used to connect to all database servers, all database server has same account: `admin:123456`.
 
-6. Then run `Automation/deploy.sh` as a system administrator.
+    > *run `Automation/process.sh` to collect and process data (Need to provide valid Twitter search API access authentication).*
+
+7. Then run `Automation/deploy.sh` as a system administrator.
 
 ## System architecture
 In this project, we use 4 virtual machine on UniMelb Research Cloud, one for web server and data processing, and the other three instances formed a database cluster. After collecting data from tweeter API and processing data by using MapReduce, the API server organizes the data into a web page understandable format and returns it when the web page calls these APIs, and then the web page draws the chart through the corresponding library.

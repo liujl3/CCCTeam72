@@ -50,5 +50,5 @@
       become_method: sudo
       shell: 
         cmd: |
-        nohup python3 ~/CCCTeam72/Website/flask_app.py &
+        nohup python3 ../../Website/flask_app.py &
     

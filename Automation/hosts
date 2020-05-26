@@ -1,8 +1,15 @@
-[couchdb]
-maindb ansible_host = 45.113.235.44
-45.113.232.155
-45.113.232.163
-[couchdb:vars]
-ansible_ssh_private_key_file='/home/ec2-user/private.pem'
-[webserver]
-localhost ansible_connection=local
+all:
+  children:
+    couchdb:
+      hosts:
+        maindb:
+          ansible_host: 45.113.235.44
+        45.113.232.155:
+        45.113.232.163:
+      vars:
+        ansible_ssh_private_key_file: '/home/ec2-user/CCCTeam72/Automation/private.pem'
+    webserver:
+      hosts:
+        localhost:
+          ansible_host: localhost
+          ansible_connection: local

@@ -1,0 +1,24 @@
+
+- hosts: localhost
+  gather_facts: yes
+  remote_user: ec2-user
+  tasks:
+    # - name : shell test
+    #   become: yes
+    #   become_method: sudo
+    #   shell:
+    #     cmd: echo "{{ansible_eth0['ipv4']['address']}}"
+    # - name: Enable node {{item}}
+    #   with_items: "{{groups.couchdb}}"
+    #   when: "item != 'maindb'"
+    #   debug:
+    #     msg: "{{item}} {{ansible_eth0['ipv4']['address']}}"
+    # - name: Add node {{item}}
+    #   with_items: "{{groups.couchdb}}"
+    #   when: "item != 'maindb'"
+    #   debug:
+    #     msg: "{{item}} {{ansible_eth0['ipv4']['address']}}"
+    # - name: Finish cluster setting
+    #   debug:
+    #     msg: "{{ansible_eth0['ipv4']['address']}}"
+    
