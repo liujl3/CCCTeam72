@@ -6,12 +6,10 @@
       become: yes
       become_method: sudo
       shell: 
-        cmd: |
-        python3 ~/CCCTeam72/Harvest/search.py
+        cmd: python3 /home/ec2-user/CCCTeam72/Harvest/search.py
 
     - name: Run analysis
       become: yes
       become_method: sudo
       shell: 
-        cmd: |
-        python3 ~/CCCTeam72/DataAnalysis/Analysis.py
+        cmd: python3 /home/ec2-user/CCCTeam72/DataAnalysis/Analysis.py

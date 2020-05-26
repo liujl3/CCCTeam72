@@ -7,10 +7,13 @@ This project focuses on Australia's tweets related to COVID19, conducts statisti
 1. Virtual machine operating system image: NeCTAR CentOS 7 x86_64.
 
 2. Security Group Open Port(TCP):
-- Database server: 5984, 4369, 9100-9200
-- Web server: 80
+    - Database server: 5984, 4369, 9100-9200
+    - Web server: 80
 
 3. `SSH` connect to web server, `cd` to user floder and clone this repository.
+
+- run [Automation](<https://github.com/liujl3/CCCTeam72/tree/master/Automation>
+- )/[deploy_website_only.sh]() without following steps can only deploy website on current instance, this can directly access the data in the existing database.
 
 4. Write the addresses of the CouchDB server in `Automation/hosts` file.
 
@@ -30,5 +33,6 @@ In this project, we use 4 virtual machine on UniMelb Research Cloud, one for web
 - **Harvest**: Twitter development API
 - **Data Analysis**: MapReduce Views
 - **WebServer**: Flask RESTful api server, Nginx reverse proxy
-- **Website**: Vue.js singe page application, Element-UI for UI
+- **Website**: Vue.js for single page application, Element-UI for UI, Webpack for pack all resources
 - **Data Visualization**: Echarts for charts, leaftlet with GeoJSON for map
+

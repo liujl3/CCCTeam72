@@ -20,7 +20,7 @@
       become: yes
       become_method: sudo
       copy:
-        src: ../nginx.conf
+        src: /home/ec2-user/CCCTeam72/Automation/nginx.conf
         dest: /etc/nginx/nginx.conf
         mode: preserve
     
@@ -28,8 +28,14 @@
       become: yes
       become_method: sudo
       shell: 
-        cmd: |
-        nginx 
+        cmd: nginx 
+      ignore_errors: yes
+
+    - name: Reload nginx
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: nginx -s reload
         
     - name: Install python3
       become: yes
@@ -42,13 +48,11 @@
       become: yes
       become_method: sudo
       shell: 
-        cmd: |
-        pip3 install ../requirements.txt
+        cmd: pip3 install -r /home/ec2-user/CCCTeam72/Automation/requirements.txt
 
     - name: Run flask api server
       become: yes
       become_method: sudo
       shell: 
-        cmd: |
-        nohup python3 ../../Website/flask_app.py &
+        cmd: nohup python3 /home/ec2-user/CCCTeam72/Website/flask_app.py &
     

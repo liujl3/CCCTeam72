@@ -33,8 +33,7 @@
     - name: Configure couchdb local settings
       become: yes
       become_method: sudo
-      shell: 
-        cmd: |
+      shell: | 
         cat>/opt/couchdb/etc/local.ini<<EOF
         [couchdb]
         uuid = 237754136e1604e3524ac7b2a88add93
@@ -49,8 +48,7 @@
     - name: Configure couchdb cluster settings
       become: yes
       become_method: sudo
-      shell:
-        cmd: |
+      shell: |
         cat>/opt/couchdb/etc/vm.args<<EOF
         -name couchdb@{{ansible_eth0['ipv4']['address']}}
         -setcookie team72
@@ -67,7 +65,16 @@
     - name: Run Couchdb services
       become: yes
       become_method: sudo
-      shell: sudo systemctl start couchdb.service
+      shell: 
+        cmd: systemctl start couchdb.service
+      ignore_errors: yes
+
+    - name: Restart Couchdb services
+      become: yes
+      become_method: sudo
+      shell: 
+        cmd: systemctl restart couchdb.service
+      ignore_errors: yes
         
 
 - hosts: maindb
@@ -78,16 +85,12 @@
       with_items: "{{groups.couchdb}}"
       when: "item != 'maindb'"
       shell:
-        cmd: |
-          curl -X POST -H "Content-Type: application/json" http://admin:123456@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"password", "port": 5984, "node_count": "3", "remote_node": "{{ item }}", "remote_current_user": "admin", "remote_current_password": "123456" }'
+        cmd: "curl -X POST -H 'Content-Type: application/json' http://admin:123456@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{'action': 'enable_cluster', 'bind_address':'0.0.0.0', 'username': 'admin', 'password':'password', 'port': 5984, 'node_count': '3', 'remote_node': '{{ item }}', 'remote_current_user': 'admin', 'remote_current_password': '123456' }'"
     - name: Add node {{item}}
       with_items: "{{groups.couchdb}}"
       when: "item != 'maindb'"
       shell:
-        cmd: |
-          curl -X POST -H "Content-Type: application/json" http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "add_node", "host":"{{item}}", "port": 5984, "username": "admin", "password":"123456"}'
+        cmd: "curl -X POST -H 'Content-Type: application/json' http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{'action': 'add_node', 'host':'{{item}}', 'port': 5984, 'username': 'admin', 'password':'123456'}'"
     - name: Finish cluster setting
       shell:
-        cmd: |
-          curl -X POST -H "Content-Type: application/json" http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{"action": "finish_cluster"}'
-  
+        cmd: "curl -X POST -H 'Content-Type: application/json' http://admin:password@{{ansible_eth0['ipv4']['address']}}:5984/_cluster_setup -d '{'action': 'finish_cluster'}'"
