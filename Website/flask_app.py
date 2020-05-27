@@ -1,4 +1,3 @@
-(team72, Decheng, Wang, 812203)
 from flask import Flask
 from flask import jsonify
 from flask import send_from_directory

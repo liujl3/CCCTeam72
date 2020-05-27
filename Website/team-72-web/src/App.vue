@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- (team72, Jian, Liu, 1010361) -->
     <router-view />
   </div>
 </template>

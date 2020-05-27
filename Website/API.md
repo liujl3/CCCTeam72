@@ -1,4 +1,3 @@
-<!-- (team72, Jian, Liu, 1010361) -->
 ### APIs
 
 #### /timeline_data

@@ -1,4 +1,3 @@
-# (team72, Dongfang, Wang, 906257)
 from matplotlib.path import Path
 import numpy as np
 import geopandas as gpd

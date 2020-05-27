@@ -77,7 +77,6 @@
       ignore_errors: yes
         
 
-# (team72, Jian, Liu, 1010361)
 - hosts: maindb
   gather_facts: yes
   remote_user: ec2-user
