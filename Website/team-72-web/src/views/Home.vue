@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <!-- (team72, Jian, Liu, 1010361) -->
     <!-- Header -->
     <header>
       <div class="header-content header-title noselect">COMP90024 - Team72</div>

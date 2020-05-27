@@ -1,3 +1,4 @@
+# (team72, Jian, Liu, 1010361)
 - hosts: webserver
   gather_facts: yes
   remote_user: ec2-user
